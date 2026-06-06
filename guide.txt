@@ -1,0 +1,66 @@
+gcloud config set project project-399f087e-fef4-4831-b4e
+
+
+Step 3 — Verify your input files exist
+
+gsutil ls gs://bigdata-iitm-week5/data/
+Expected output:
+
+
+gs://bigdata-iitm-week5/data/customer_master.csv
+gs://bigdata-iitm-week5/data/customer_updates.csv
+gs://bigdata-iitm-week5/data/transactions.csv
+gsutil ls gs://bigdata-iitm-week5/input/
+
+
+# Download all CSVs + script to Cloud Shell
+gsutil cp gs://bigdata-iitm-week5/data/customer_master.csv ~/
+gsutil cp gs://bigdata-iitm-week5/data/customer_updates.csv ~/
+gsutil cp gs://bigdata-iitm-week5/data/transactions.csv ~/
+gsutil cp gs://bigdata-iitm-week5/input/spark_assignment.py ~/
+
+
+Step 4 — Enable Dataproc API
+
+gcloud services enable dataproc.googleapis.com
+
+Step 5 — Create Dataproc Cluster
+
+gcloud dataproc clusters create bigdata-cluster \
+    --region=us-central1 \
+    --single-node \
+    --master-machine-type=n1-standard-2 \
+    --image-version=2.1-debian11
+
+Step 6 — Submit the Spark Job
+
+gcloud dataproc jobs submit pyspark \
+    gs://bigdata-iitm-week5/input/spark_assignment.py \
+    --cluster=bigdata-cluster \
+    --region=us-central1
+This runs the job. You'll see live logs streaming. Wait for Job finished successfully.
+
+tep 7 — Verify outputs in GCS
+
+gsutil ls gs://bigdata-iitm-week5/output/
+Expected:
+
+
+gs://bigdata-iitm-week5/output/avg_transaction_value/
+gs://bigdata-iitm-week5/output/customers_per_city/
+gs://bigdata-iitm-week5/output/scd_type1_customer_master/
+gs://bigdata-iitm-week5/output/scd_type2_customer_master/
+gs://bigdata-iitm-week5/output/top5_customers/
+
+
+mkdir -p ~/output
+gsutil -m cp -r gs://bigdata-iitm-week5/output/ ~/output/
+ls ~/output/
+
+Run these in Cloud Shell:
+
+
+# Download entire output folder from GCS to Cloud Shell
+gsutil -m cp -r gs://bigdata-iitm-week5/output/ ~/output/
+
+

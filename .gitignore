@@ -1,0 +1,14 @@
+# Submission zip (redundant — folder version is tracked)
+*.zip
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Spark local output
+output/
